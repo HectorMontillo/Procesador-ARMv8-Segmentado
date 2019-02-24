@@ -1,0 +1,14 @@
+OPERACIONES QUE HAY EN "instruction.mem" 
+Nota: todos los registros son inicializados en cero (64'b0)
+
+PC Instruction	Formats
+
+
+		Rd, Rn, inmediate		
+0    ADDI 	X0, X0, #1
+4    ADDI 	X1, X0, #0
+
+		Rd, Rn, Rm
+8    ADD  	X2, X0, x1
+12   AND	X3, X0, X1
+16   OR		X4, X3, X2	 

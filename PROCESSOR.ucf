@@ -1,0 +1,13 @@
+
+# PlanAhead Generated physical constraints 
+
+NET "clk" LOC = B8;
+NET "Reset" LOC = G18;
+NET "Salida[0]" LOC = J14;
+NET "Salida[1]" LOC = J15;
+NET "Salida[2]" LOC = K15;
+NET "Salida[3]" LOC = K14;
+NET "Salida[4]" LOC = E17;
+NET "Salida[5]" LOC = P15;
+NET "Salida[6]" LOC = F4;
+NET "Salida[7]" LOC = R4;
