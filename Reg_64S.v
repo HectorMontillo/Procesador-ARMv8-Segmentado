@@ -26,10 +26,13 @@ module Reg_64S(
     input Reset
     );
 	always @(posedge clk)
-        if (Stall == 0)
-		    if (Reset)
+		if (Stall == 'b0)
+		    if (Reset=='b1)
 			    Q <= 64'b0;
 		    else
 			    Q <= D;
+		else
+		    if (Reset=='b1)
+			    Q <= 64'b0;
 endmodule
 

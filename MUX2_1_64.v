@@ -25,8 +25,10 @@ module MUX2_1_64(
     output reg [63:0] Out
     );
 	always @(A, B, S)
-		case (S)
-			'b0: Out <= A;
-			default: Out <= B;
-		endcase
+	begin
+		if(S == 'b1)
+			Out <= B;
+		else
+			Out <= A;
+	end
 endmodule

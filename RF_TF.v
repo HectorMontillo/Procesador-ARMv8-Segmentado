@@ -4,10 +4,10 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   11:45:42 02/19/2019
+// Create Date:   14:36:12 03/01/2019
 // Design Name:   RF
-// Module Name:   C:/Users/hecto/Desktop/Promay/ProcesadorMaykol/RF_TF.v
-// Project Name:  ProcesadorMaykol
+// Module Name:   C:/Users/maicol/Documents/Arquitectura/Nueva carpeta/paila/RF_TF.v
+// Project Name:  paila
 // Target Device:  
 // Tool versions:  
 // Description: 
@@ -54,40 +54,20 @@ module RF_TF;
 
 	initial begin
 		// Initialize Inputs
-		ReadReg1 = 0;
-		ReadReg2 = 0;
+		ReadReg1 = 'b00001;
+		ReadReg2 = 'b00010;
 		WriteReg = 0;
 		WriteData = 0;
 		RegWrite = 0;
 		Reset = 0;
 		clk = 0;
+
+		// Wait 100 ns for global reset to finish
 		#100;
-		
-		ReadReg1 = 1;
-		ReadReg2 = 2;
-		WriteReg = 0;
-		WriteData = 0;
-		RegWrite = 0;
-      #100;
-		
-		ReadReg1 = 0;
-		ReadReg2 = 0;
-		WriteReg = 3;
-		WriteData = 4;
-		RegWrite = 1;
-		#100;
-		
-		ReadReg1 = 3;
-		ReadReg2 = 2;
-		WriteReg = 0;
-		WriteData = 0;
-		RegWrite = 0;
-		#100;
+        
 		// Add stimulus here
 
 	end
-	always 
-		#20 clk = !clk;
       
 endmodule
 

@@ -33,5 +33,6 @@ module SE(
 			'b01: S <= {{55{DT_address[8]}},DT_address};
 			'b10: S <= {{58{SHAMT[5]}},SHAMT};
 			'b11: S <= {{45{COND_BR_address[18]}},COND_BR_address};
+			default: S<=64'b11;
 		endcase
 endmodule

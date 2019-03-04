@@ -21,7 +21,17 @@
 module PROCESSOR(
     input clk,
 	 input Reset,
-	 output reg[63:0] Salida
+	 output [63:0] Salida,
+	 output [31:0] salida2,
+	 output [63:0] Salida3,
+	 output [1:0] Salida4,
+	 output [1:0] Salida5,
+	 output [4:0] Rn,
+	 output [4:0] Rm,
+	 output [4:0] Rdm,
+	 output [4:0] Rdw,
+	 output [63:0] muxA,
+	 output [63:0] muxB
     );
 
 //FETCH
@@ -34,7 +44,7 @@ wire [31:0] Instruction_Fe_wire;
 wire Branch_De_Result_wire;
 
 //DECODE
-wire X20_De_wire;
+wire [63:0]X20_De_wire;
 wire Reg2Loc_De_wire;
 wire ALUSrc_De_wire;
 wire [2:0]ALUOp_De_wire; 
@@ -47,7 +57,7 @@ wire OutMemWrite_De_wire;
 wire MemtoReg_De_wire;
 wire RegWrite_De_wire;
 wire OutRegWrite_De_wire;
-wire SignExtOut_De_wire;
+wire [1:0]SignExtOut_De_wire;
 wire [63:0]SignExt_De_wire;
 wire [63:0]LL2Out_De_wire;
 wire [4:0]MUXOut_De_wire;
@@ -60,13 +70,13 @@ wire [31:0] Instruction_De_wire;
 wire [63:0] PC_De_wire;
 
 //EXECUTE
-wire X20_Ex_wire;
-wire MuxFAOut_Ex_wire;
-wire MuxFBOut_Ex_wire;
-wire ForwardA_Ex_wire;
-wire ForwardB_Ex_wire;
-wire MUXOut1_Ex_wire;
-wire ALUResult_Ex_wire;
+wire [63:0] X20_Ex_wire;
+wire [63:0] MuxFAOut_Ex_wire;
+wire [63:0] MuxFBOut_Ex_wire;
+wire [1:0] ForwardA_Ex_wire;
+wire [1:0] ForwardB_Ex_wire;
+wire [63:0] MUXOut1_Ex_wire;
+wire [63:0] ALUResult_Ex_wire;
 wire Zero_Ex_wire;
 
 wire [4:0]Rd_Ex_wire;
@@ -84,11 +94,11 @@ wire MemtoReg_Ex_wire;
 wire RegWrite_Ex_wire;
 
 //MEMORY 
-wire DataRead_Mem_wire;
+wire [63:0]DataRead_Mem_wire;
 
-wire Rd_Mem_wire;
-wire DataWrite_Mem_wire;
-wire ALUResult_Mem_wire;
+wire [4:0] Rd_Mem_wire;
+wire [63:0] DataWrite_Mem_wire;
+wire [63:0] ALUResult_Mem_wire;
 
 wire MemRead_Mem_wire; 
 wire MemWrite_Mem_wire; 
@@ -96,10 +106,11 @@ wire MemtoReg_Mem_wire;
 wire RegWrite_Mem_wire;
 
 //WRITE-BACK 
-wire RegWriteData_WB_wire;
+wire [63:0] RegWriteData_WB_wire;
+wire [4:0] Rd_WB_wire;
 
-wire DataRead_WB_wire;
-wire ALUResult_WB_wire;
+wire [63:0] DataRead_WB_wire;
+wire [63:0] ALUResult_WB_wire;
 wire MemtoReg_WB_wire;
 wire RegWrite_WB_wire;
 
@@ -119,16 +130,30 @@ Reg_64S PROGRAM_COUNTER(
     .clk(clk), 
     .Reset(Reset)
     );
-
+	 
 IM INSTRUCTION_MEMORY (
     .Address(PC_Fe_wire), 
     .Instruction(Instruction_Fe_wire)
     );
+
+Reg_64S PROGRAM_COUNTER1(
+    .D(MUXOut_Fe_wire), 
+    .Stall(Stall_De_wire),
+    .Q(Salida), 
+    .clk(clk), 
+    .Reset(Reset)
+    );
 	 
+IM INSTRUCTION_MEMORY1 (
+    .Address(PC_Fe_wire), 
+    .Instruction(salida2)
+    ); 
+ 
 ADDER4 ADDER1 ( 
     .B(PC_Fe_wire), 
     .Out(AdderOut_Fe_wire)
     );
+
 
 Reg_64S PC_De(
 		.D(PC_Fe_wire),
@@ -137,7 +162,7 @@ Reg_64S PC_De(
 		.clk(clk),
 		.Reset(Branch_De_Result_wire)
 		);
-		
+
 Reg_32S Inst_De(
 	.D(Instruction_Fe_wire),
     .Stall(Stall_De_wire),
@@ -145,7 +170,6 @@ Reg_32S Inst_De(
 	.clk(clk),
 	.Reset(Branch_De_Result_wire)
 	);
-
 //=========DECODE============================
 
 Hazzard HAZZARD_UNIT(
@@ -154,19 +178,6 @@ Hazzard HAZZARD_UNIT(
     .Rd(Rd_Ex_wire),
     .MemRead(MemRead_Ex_wire),
     .Stall(Stall_De_wire)
-);
-
-
-MUX2_1S MUX5(
-    .Branch(Branch_De_wire),
-    .RegWrite(RegWrite_De_wire),
-    .MemRead(MemRead_De_wire),
-    .MemWrite(MemWrite_De_wire),
-    .Stall(Stall_De_wire),
-    .OutBranch(OutBranch_De_wire),
-    .OutRegWrite(OutRegWrite_De_wire),
-    .OutMemRead(OutMemRead_De_wire),
-    .OutMemWrite(OutMemWrite_De_wire)
 );
 
 CU CONTROL_UNIT (
@@ -181,6 +192,18 @@ CU CONTROL_UNIT (
     .RegWrite(RegWrite_De_wire), 
     .SignExt(SignExtOut_De_wire)
     );
+
+MUX2_1S MUX5(
+    .Branch(Branch_De_wire),
+    .RegWrite(RegWrite_De_wire),
+    .MemRead(MemRead_De_wire),
+    .MemWrite(MemWrite_De_wire),
+    .Stall(Stall_De_wire),
+    .OutBranch(OutBranch_De_wire),
+    .OutRegWrite(OutRegWrite_De_wire),
+    .OutMemRead(OutMemRead_De_wire),
+    .OutMemWrite(OutMemWrite_De_wire)
+);
 
 SE SIGN_EXTEND (
     .A(Instruction_De_wire[31:0]), 
@@ -218,7 +241,20 @@ RF REGISTER_FILE (
     .ReadData2(ReadData2_De_wire),
 	 .X20(X20_De_wire)
     );
-	
+	 
+RF REGISTER_FILE1 (
+    .ReadReg1(Instruction_De_wire[9:5]), 
+    .ReadReg2(MUXOut_De_wire), 
+    .WriteReg(Rd_WB_wire), 
+    .WriteData(RegWriteData_WB_wire), 
+    .RegWrite(RegWrite_WB_wire),
+	 .Reset(Reset),	 
+    .clk(clk), 
+    .ReadData1(ReadData1_De_wire), 
+    .ReadData2(ReadData2_De_wire),
+	 .X20(Salida3)
+    );
+
 Comp0 COMPARE (
     .B(ReadData2_De_wire),
     .Zero(Zero_De_wire)
@@ -228,13 +264,6 @@ AND AND_GATE(
     .A(Zero_De_wire),
     .B(OutBranch_De_wire),
     .S(Branch_De_Result_wire)
-    );
-
-Reg_64 X20_EX(
-    .D(X20_De_wire),
-    .Q(Salida),
-	.clk(clk),
-	.Reset(Reset)
     );
 
 Reg_5 Rd_ex(
@@ -251,9 +280,23 @@ Reg_5 Rn_ex(
 	.Reset(Reset)
     );
 
+Reg_5 Rn_ex1(
+    .D(Instruction_De_wire[9:5]),
+    .Q(Rn),
+	.clk(clk),
+	.Reset(Reset)
+    );
+
 Reg_5 Rm_ex(
     .D(Instruction_De_wire[20:16]),
     .Q(Rm_Ex_wire),
+	.clk(clk),
+	.Reset(Reset)
+    );
+
+Reg_5 Rm_ex1(
+    .D(Instruction_De_wire[20:16]),
+    .Q(Rm),
 	.clk(clk),
 	.Reset(Reset)
     );
@@ -286,7 +329,7 @@ Reg ALUSrc_Ex(
 	.Reset(Reset)
     );
 
-Reg ALUOp_Ex(
+Reg_3 ALUOp_Ex(
     .D(ALUOp_De_wire),
     .Q(ALUOp_Ex_wire),
     .clk(clk),
@@ -334,8 +377,19 @@ Forwarding_Unit FU(
     .ForwardB(ForwardB_Ex_wire)
 );
 
+Forwarding_Unit FU1(
+    .Rn(Rn_Ex_wire),
+    .Rm(Rm_Ex_wire),
+    .Rd_Mem(Rd_Mem_wire),
+    .Rd_WB(Rd_WB_wire),
+    .RegWrite_Mem(RegWrite_Mem_wire),
+    .RegWrite_WB(RegWrite_WB_wire),
+    .ForwardA(Salida4),
+    .ForwardB(Salida5)
+);
+
 MUX3_1_64 MUX6(
-	.A(ReadData1_Ex_wire),
+	.A(ReadData1_Ex_wire),//A
 	.B(ALUResult_Mem_wire),
 	.C(RegWriteData_WB_wire),
 	.S(ForwardA_Ex_wire),
@@ -350,19 +404,34 @@ MUX3_1_64 MUX7(
 	.Out(MuxFBOut_Ex_wire)
 );
 
-MUX2_1_64 MUX3 (
+MUX3_1_64 MUX61(
+	.A(ReadData1_Ex_wire),//A
+	.B(ALUResult_Mem_wire),
+	.C(RegWriteData_WB_wire),
+	.S(ForwardA_Ex_wire),
+	.Out(muxA)
+);
+
+MUX3_1_64 MUX71(
+	.A(ReadData2_Ex_wire),
+	.B(ALUResult_Mem_wire),
+	.C(RegWriteData_WB_wire),
+	.S(ForwardB_Ex_wire),
+	.Out(muxB)
+);
+
+MUX2_1_64 MUX35 (
     .A(MuxFBOut_Ex_wire), 
     .B(SignExt_Ex_wire), 
-    .S(ALUSrc_Ex_wire), 
+    .S(ALUSrc_Ex_wire),
     .Out(MUXOut1_Ex_wire)
     );
 
 ALU ARITHMETIC_LOGIC_UNIT (
-    .A(ReadData1_Ex_wire), 
+    .A(MuxFAOut_Ex_wire), 
     .B(MUXOut1_Ex_wire), 
     .ALUOp(ALUOp_Ex_wire), 
-    .ALUResult(ALUResult_Ex_wire), 
-    .Zero(Zero_Ex_wire)
+    .ALUResult(ALUResult_Ex_wire)
     );
 
 Reg_64 ALUResult_Mem(
@@ -382,6 +451,13 @@ Reg_64 DataWrite_Mem(
 Reg_5 Rd_Mem(
     .D(Rd_Ex_wire),
     .Q(Rd_Mem_wire),
+	.clk(clk),
+	.Reset(Reset)
+    );
+
+Reg_5 Rd_Mem1(
+    .D(Rd_Ex_wire),
+    .Q(Rdm),
 	.clk(clk),
 	.Reset(Reset)
     );
@@ -441,6 +517,13 @@ Reg_64 ALUResult_WB(
 Reg_5 Rd_WB(
     .D(Rd_Mem_wire),
     .Q(Rd_WB_wire),
+	.clk(clk),
+	.Reset(Reset)
+    );
+
+Reg_5 Rd_WB1(
+    .D(Rd_Mem_wire),
+    .Q(Rdw),
 	.clk(clk),
 	.Reset(Reset)
     );

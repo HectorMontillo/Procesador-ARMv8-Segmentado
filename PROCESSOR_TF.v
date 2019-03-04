@@ -30,12 +30,32 @@ module PROCESSOR_TF;
 
 	// Outputs
 	wire [63:0] Salida;
+	wire [31:0] salida2;
+	wire [63:0] Salida3;
+	wire [1:0] Salida4;
+	wire [1:0] Salida5;
+	wire [4:0] Rm;
+	wire [4:0] Rn;
+	wire [4:0] Rdm;
+	wire [4:0] Rdw;
+	wire [63:0] muxA;
+	wire [63:0] muxB;
 
 	// Instantiate the Unit Under Test (UUT)
 	PROCESSOR uut (
 		.clk(clk), 
 		.Reset(Reset), 
-		.Salida(Salida)
+		.Salida(Salida),
+		.salida2(salida2),
+		.Salida3(Salida3),
+		.Salida4(Salida4),
+		.Salida5(Salida5),
+		.Rn(Rn),
+		.Rm(Rm),
+		.Rdm(Rdm),
+		.Rdw(Rdw),
+		.muxA(muxA),
+		.muxB(muxB)
 	);
 
 	initial begin

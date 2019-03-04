@@ -40,10 +40,10 @@ module PROCESSOR_FIX(
 	output [63:0]SignExt_Ex_wire,
 	output [63:0]ReadData1_Ex_wire,
 	output [63:0]ReadData2_Ex_wire,
-	output Salida
+	output [63:0] Salida
 );
 //DECODE
-wire X20_De_wire;
+wire [63:0]X20_De_wire;
 wire Reg2Loc_De_wire;
 wire ALUSrc_De_wire;
 wire [2:0]ALUOp_De_wire; 
@@ -66,7 +66,7 @@ wire Zero_De_wire;
 wire Stall_De_wire;
 
 //EXECUTE
-wire X20_Ex_wire;
+wire [63:0]X20_Ex_wire;
 wire MuxFAOut_Ex_wire;
 wire MuxFBOut_Ex_wire;
 wire ForwardA_Ex_wire;
@@ -237,7 +237,7 @@ Reg ALUSrc_Ex(
 	.Reset(Reset)
     );
 
-Reg ALUOp_Ex(
+Reg_3 ALUOp_Ex(
     .D(ALUOp_De_wire),
     .Q(ALUOp_Ex_wire),
     .clk(clk),

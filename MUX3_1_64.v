@@ -10,7 +10,7 @@ module MUX3_1_64(
 	always @(A, B, S)
 		case (S)
 			'b00: Out <= A;
-      'b01: Out <= B;
-      'b10: Out <= C;
+			'b01: Out <= B;
+			'b10: Out <= C;
 		endcase
 endmodule

@@ -18,20 +18,16 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module Reg_32S(
-    input [31:0] D,
-    input Stall,
-    output reg [31:0] Q,
+module Reg_3(
+    input [2:0] D,
+    output reg [2:0] Q,
     input clk,
     input Reset
     );
 	always @(posedge clk)
-      if (Stall=='b0)
-		    if (Reset)
-			    Q <= 0;
-		    else
-			    Q <= D;
+		if (Reset)
+			Q <= 64'b0;
 		else
-		    if (Reset)
-			    Q <= 0;
+			Q <= D;
 endmodule
+

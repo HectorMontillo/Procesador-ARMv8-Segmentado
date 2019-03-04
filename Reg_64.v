@@ -25,7 +25,7 @@ module Reg_64(
     input Reset
     );
 	always @(posedge clk)
-		if (Reset)
+		if (Reset == 'b1)
 			Q <= 0;
 		else
 			Q <= D;

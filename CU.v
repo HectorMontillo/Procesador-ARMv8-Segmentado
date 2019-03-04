@@ -143,7 +143,18 @@ module CU(
 										RegWrite <= 'b1;
 										SignExt <= 'b10;
 									end	
-				'b00000000000: begin //LSL
+				'b10110100xxx: begin //CBZ
+										Reg2Loc <= 'b1;
+										ALUSrc <= 'b0;
+										ALUOp <= 'b101;
+										Branch <= 'b1;
+										MemRead <= 'b0;
+										MemWrite <= 'b0;
+										MemtoReg <= 'b0;
+										RegWrite <= 'b0;
+										SignExt <= 'b11;
+									end	
+				'b00000000000: begin //NADA
 										Reg2Loc <= 'b0;
 										ALUSrc <= 'b0;
 										ALUOp <= 'b101;

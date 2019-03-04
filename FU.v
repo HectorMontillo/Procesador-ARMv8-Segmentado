@@ -12,19 +12,19 @@ module Forwarding_Unit (
 );
   always@(Rn, Rm, Rd_Mem, Rd_WB, RegWrite_WB, RegWrite_Mem)
   begin
-    if (Rn == Rd_Mem & (RegWrite_Mem))
+    if (Rn == Rd_Mem & (RegWrite_Mem=='b1))
       ForwardA <= 'b01;
     else
-      if (Rn == Rd_WB & (RegWrite_WB))
-      ForwardA <= 'b10;
+      if (Rn == Rd_WB & (RegWrite_WB=='b1))
+			ForwardA <= 'b10;
       else
-      ForwardA <= 'b00;
-    if (Rm == Rd_Mem & (RegWrite_Mem))
+			ForwardA <= 'b00;
+    if (Rm == Rd_Mem & (RegWrite_Mem=='b1))
         ForwardB <= 'b01;
       else
-        if (Rm == Rd_WB & (RegWrite_WB))
-        ForwardB <= 'b10;
+        if (Rm == Rd_WB & (RegWrite_WB=='b1))
+			ForwardB <= 'b10;
         else
-        ForwardB <= 'b00;
+			ForwardB <= 'b00;
   end
 endmodule

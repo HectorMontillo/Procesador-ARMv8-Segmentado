@@ -22,10 +22,8 @@ module ALU(
     input [63:0] A,
     input [63:0] B,
     input [2:0] ALUOp,
-    output reg [63:0] ALUResult,
-    output Zero
+    output reg [63:0] ALUResult
     );
-	assign Zero = (ALUResult == 0);
 	always @(ALUOp, A, B)
 		case (ALUOp)
 			'b000: ALUResult <= A+B;

@@ -35,7 +35,7 @@ module RF(
 		$readmemb("memory/register.mem", RF);
 	assign ReadData1 = RF[ReadReg1];
 	assign ReadData2 = RF[ReadReg2];
-	assign X20= RF['b10100];
+	assign X20= RF['b11000];
 	always @(posedge clk)
 		if (RegWrite)
 			RF[WriteReg] <= WriteData;				
