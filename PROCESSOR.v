@@ -31,7 +31,12 @@ module PROCESSOR(
 	 output [4:0] Rdm,
 	 output [4:0] Rdw,
 	 output [63:0] muxA,
-	 output [63:0] muxB
+	 output [63:0] muxB,
+	 output Tx,
+	 output TxDone,
+	 output [7:0] TxData,
+	 output memwrite_uart,
+	 output [7:0] TxData_s
     );
 
 //FETCH
@@ -499,6 +504,20 @@ DM DATA_MEMORY (
     .MemWrite(MemWrite_Mem_wire), 
     .DataRead(DataRead_Mem_wire)
     );
+	 
+Transmitter UART(
+		.Clk(clk), 
+		.TxData(DataWrite_Mem_wire[7:0]), 
+		.Tx(Tx),
+		.TxDone(TxDone),
+		.TxEn(MemWrite_Mem_wire),
+		.TxData_s(TxData_s)
+
+	);
+
+	
+assign TxData = DataWrite_Mem_wire[7:0];
+assign memwrite_uart = MemWrite_Mem_wire;
 
 Reg_64 DataRead_WB(
     .D(DataRead_Mem_wire),

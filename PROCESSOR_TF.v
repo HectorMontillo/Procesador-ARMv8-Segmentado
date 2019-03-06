@@ -40,6 +40,11 @@ module PROCESSOR_TF;
 	wire [4:0] Rdw;
 	wire [63:0] muxA;
 	wire [63:0] muxB;
+	wire Tx;
+	wire TxDone;
+	wire [7:0] TxData; 
+	wire memwrite_uart;
+	wire [7:0] TxData_s;  
 
 	// Instantiate the Unit Under Test (UUT)
 	PROCESSOR uut (
@@ -55,7 +60,12 @@ module PROCESSOR_TF;
 		.Rdm(Rdm),
 		.Rdw(Rdw),
 		.muxA(muxA),
-		.muxB(muxB)
+		.muxB(muxB),
+		.Tx(Tx),
+		.TxDone(TxDone),
+		.TxData(TxData),
+		.memwrite_uart(memwrite_uart),
+		.TxData_s(TxData_s)
 	);
 
 	initial begin
